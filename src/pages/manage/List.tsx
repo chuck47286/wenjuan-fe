@@ -1,8 +1,11 @@
 import React, { FC, useState } from 'react';
 // import { useSearchParams } from 'react-router-dom';
+import { Typography } from 'antd';
 import { useTitle } from 'ahooks';
 import QuestionCard from '../../components/QuestionCard';
-import styles from './List.module.scss';
+import styles from './common.module.scss';
+
+const { Title } = Typography;
 
 const rawQuestionList = [
   {
@@ -17,7 +20,7 @@ const rawQuestionList = [
     _id: 'q2',
     title: '问卷2',
     isPublished: true,
-    isStar: false,
+    isStar: true,
     answerCount: 3,
     createdAt: '3月11日 13:23',
   },
@@ -50,17 +53,19 @@ const List: FC = () => {
     <>
       <div className={styles.header}>
         <div className={styles.left}>
-          <h3>我的问卷</h3>
+          <Title level={3}>我的问卷</Title>
         </div>
         <div className={styles.right}> (搜索) </div>
       </div>
       <div className={styles.content}>
-        {questionList.map((q) => {
-          const { _id } = q;
-          return <QuestionCard key={_id} {...q} />;
-        })}
+        {/* 问卷列表 */}
+        {questionList.length > 0 &&
+          questionList.map((q) => {
+            const { _id } = q;
+            return <QuestionCard key={_id} {...q} />;
+          })}
       </div>
-      <div className={styles.footer}>list page footer</div>
+      <div className={styles.footer}>loadMore... 上划加载更多...</div>
     </>
   );
 };
