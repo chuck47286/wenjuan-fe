@@ -1,10 +1,15 @@
 import React, { FC } from 'react';
-import { useParams } from 'react-router-dom';
+import useLoadQuestionData from '../../../hooks/useLoadQuestionData';
 // 动态路由 edit/:id 使用useParams获取id信息
 const Edit: FC = () => {
-  const { id = '' } = useParams();
+  const { loading, data } = useLoadQuestionData();
 
-  return <p>Edit {id}</p>;
+  return (
+    <div>
+      <p>Edit page</p>
+      {loading ? <p>loading</p> : <p>{JSON.stringify(data)}</p>}
+    </div>
+  );
 };
 
 export default Edit;

@@ -1,8 +1,12 @@
-import React, { FC } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { FC, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button, Typography } from 'antd';
 import { MANAGE_INDEX_PATHNAME } from '../router';
 import styles from './Home.module.scss';
+
+import axios from 'axios';
+// 上线前，需要将mockjs模拟器注释掉，不可以上线
+// import '../_mock/index';
 
 const { Title, Paragraph } = Typography;
 
@@ -11,6 +15,39 @@ const { Title, Paragraph } = Typography;
 // 携带参数跳转
 const Home: FC = () => {
   const nav = useNavigate();
+
+  // useEffect(() => {
+  //   // fetch('/api/test')
+  //   //   .then((res) => res.json())
+  //   //   .then((data) => {
+  //   //     console.log('fetch data', data);
+  //   //   });
+  //   // mock.js 不能拦截fetch请求方式，只能拦截XMLHttpRequest 现在需要使用axios取代
+
+  //   // axios内部使用了XMLHttpRequest
+  //   axios.get('/api/test').then((res) => console.log('axios res', res.data));
+  // }, []);
+
+  useEffect(() => {
+    // http://localhost:3001/api/test
+    // 3000 fe
+    // 跨域 mock create-react-app webpack devServer代理
+    fetch('/api/test')
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((data) => {
+        console.log('fetch data', data);
+      })
+      .catch((err) => {
+        console.error('error:', err.message);
+      });
+
+    // axios.get('/api/test').then((res) => console.log('axios res', res.data));
+  }, []);
 
   // function clickHandler() {
   //   // nav('/login?b=20');
