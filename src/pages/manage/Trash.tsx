@@ -13,6 +13,7 @@ import {
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import ListSearch from '../../components/ListSearch';
 import useLoadQuestionListData from '../../hooks/useLoadQuestionListData';
+import ListPage from '../../components/ListPage';
 import styles from './common.module.scss';
 
 const { Title } = Typography;
@@ -114,6 +115,9 @@ const Trash: FC = () => {
         )}
         {!loading && list.length === 0 && <Empty description="暂无数据" />}
         {list.length > 0 && TableElem}
+      </div>
+      <div className={styles.footer}>
+        <ListPage total={total} />
       </div>
     </>
   );
