@@ -1,8 +1,19 @@
 import React, { FC, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Typography, Space, Form, Input, Button, Checkbox } from 'antd';
+import {
+  Typography,
+  Space,
+  Form,
+  Input,
+  Button,
+  Checkbox,
+  message,
+} from 'antd';
 import { UserAddOutlined } from '@ant-design/icons';
-import { REGISTER_PATHNAME } from '../router';
+import { useRequest } from 'ahooks';
+import { loginService } from '../services/user';
+import { REGISTER_PATHNAME, MANAGE_INDEX_PATHNAME } from '../router';
+import { setToken } from '../utils/user-token';
 import styles from './Login.module.scss';
 
 const { Title } = Typography;
@@ -28,7 +39,7 @@ function getUserFromStorage() {
 }
 
 const Login: FC = () => {
-  // const nav = useNavigate();
+  const nav = useNavigate();
 
   const [form] = Form.useForm(); // 第三方hook
   useEffect(() => {
@@ -36,9 +47,28 @@ const Login: FC = () => {
     form.setFieldsValue({ username, password });
   }, []);
 
+  const { run } = useRequest(
+    async (username: string, password: string) => {
+      const data = await loginService(username, password);
+      return data;
+    },
+    {
+      manual: true,
+      onSuccess(result) {
+        const { token = '' } = result;
+        // 存储token
+        setToken(token);
+        message.success('登录成功');
+        nav(MANAGE_INDEX_PATHNAME); // 跳转到'我的问卷'
+      },
+    }
+  );
+
   const onFinish = (value: any) => {
     console.log(value);
     const { username, password, remember } = value || {};
+
+    run(username, password); // 执行登录
 
     if (remember) {
       rememberUser(username, password);
@@ -76,7 +106,7 @@ const Login: FC = () => {
                 max: 20,
                 message: '字符长度在5~20之间',
               },
-              { pattern: /^w+$/, message: '只能是字母数字下划线' },
+              { pattern: /^\w+$/, message: '只能是字母数字下划线' },
             ]}
           >
             <Input />
