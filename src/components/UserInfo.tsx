@@ -2,18 +2,24 @@ import React, { FC } from 'react';
 import { UserOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button, message } from 'antd';
-import { useRequest } from 'ahooks';
-import { getUserInfoService } from '../services/user';
+// import { useRequest } from 'ahooks';
+// import { getUserInfoService } from '../services/user';
+import { useDispatch } from 'react-redux';
 import { removeToken } from '../utils/user-token';
 import { LOGIN_PATHNAME } from '../router';
+import useGetUserInfo from '../hooks/useGetUserInfo';
+import { logoutReducer } from '../store/userReducer';
 
 const UserInfo: FC = () => {
   const nav = useNavigate();
+  const dispatch = useDispatch();
 
-  const { data } = useRequest(getUserInfoService);
-  const { username, nickname } = data || {};
+  // const { data } = useRequest(getUserInfoService);
+  // const { username, nickname } = data || {};
+  const { username, nickname } = useGetUserInfo(); // 从redux store中获取用户信息
 
   function logout() {
+    dispatch(logoutReducer());
     removeToken(); // 清除token
     message.success('退出成功');
     nav(LOGIN_PATHNAME);
