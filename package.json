@@ -50,6 +50,7 @@
   },
   "devDependencies": {
     "@craco/craco": "^7.1.0",
+    "@types/lodash": "^4.17.13",
     "@types/mockjs": "^1.0.10"
   }
 }
